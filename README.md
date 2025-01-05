@@ -11,4 +11,10 @@ Solution Verification: Tools to validate proposed solutions for SAT and 3-SAT pr
 
 Empirical Analysis: Performance profiling of algorithms, with insights into time and space complexity through experimentation on real-world and synthetic datasets.
 
-Whether you're a student, researcher, or enthusiast, SAT3SATAnalyzer provides everything you need to tackle satisfiability problems efficiently and gain deep insights into their computational complexity.
+SAT3SATAnalyzer provides everything you need to tackle The Boolean satisfiability problems efficiently and gain deep insights into their computational complexity.
+
+references:
+_sat to 3sat reduction:
+[text](https://cse.iitkgp.ac.in/~palash/2018AlgoDesignAnalysis/SAT-3SAT.pdf)
+_backtracking search: Davis-Putnam-Logemann-Loveland (DPLL) Algorithm
+[text](https://en.wikipedia.org/wiki/DPLL_algorithm)

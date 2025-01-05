@@ -1,5 +1,8 @@
 def verify_solution(formula, assignment):
-    for clause in formula:
-        if not any(assignment.get(abs(lit), False) if lit > 0 else not assignment.get(abs(lit), True) for lit in clause):
-            return False
-    return True
+    return all(
+        any(
+            (lit > 0) == assignment[abs(lit)]
+            for lit in clause
+        )
+        for clause in formula
+    )
