@@ -9,3 +9,4 @@ def generate_random_formula(nb_vars, num_clauses):
             clause.append(var if random.random() > 0.5 else -var)
         formula.append(clause)
     return formula
+

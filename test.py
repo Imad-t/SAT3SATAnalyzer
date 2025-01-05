@@ -36,7 +36,7 @@ def measure_time_and_memory(func, iterations, *args):
 def analyze_performance():
     num_vars = 5  # Fixed number of variables
     clause_range = range(1, 16, 1)  # Gradually increase the number of clauses
-    iterations = 3  # Number of repetitions for averaging
+    iterations = 1  # Number of repetitions for averaging
     results = {
         "num_clauses": [],
         "sat_time": [],
