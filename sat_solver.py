@@ -1,30 +1,85 @@
-def solve_sat(formula):
-    def is_satisfiable(formula, assignment={}):
-        # Check if the formula is satisfied
-        if all(any((lit > 0 and assignment.get(abs(lit), False)) or (lit < 0 and not assignment.get(abs(lit), False)) for lit in clause) for clause in formula):
-            return assignment
+from typing import List, Dict, Union
 
-        # Check if the formula is unsatisfiable
-        if any(all((lit > 0 and assignment.get(abs(lit), False) is False) or (lit < 0 and assignment.get(abs(lit), False) is True) for lit in clause) for clause in formula):
-            return None
+def solve_sat(clauses: List[List[int]], nb_vars: int) -> Union[Dict[int, bool], None]:
+    """
+    Try to find an assignment satisfying all clauses.
+    :param clauses: list of clauses, each clause is a list of "literals"
+    :param nb_vars: number of variables (n)
+    :return: a dictionary {var_index -> bool} representing the assignment,
+             or None if unsatisfiable.
+    """
+    assignment = {}  # var_index -> bool, e.g., {1: True, 2: False, ...}
 
-        # Find the first unassigned variable
-        unassigned = next((abs(lit) for clause in formula for lit in clause if abs(lit) not in assignment), None)
-        if unassigned is None:
-            return None
+    def backtrack(var_index: int) -> bool:
+        # If all variables are assigned, check if the assignment satisfies all clauses
+        if var_index > nb_vars:
+            return check_all_clauses(assignment, clauses)
 
-        # Try assigning True and False to the unassigned variable
-        for value in [True, False]:
-            assignment[unassigned] = value
-            result = is_satisfiable(formula, assignment)
-            if result:
-                return result
-            del assignment[unassigned]
+        # Try assigning True or False to the current variable
+        for val in [True, False]:
+            assignment[var_index] = val
+            if backtrack(var_index + 1):
+                return True
+            # Backtrack if no solution found
+            del assignment[var_index]
+        return False
 
+    def check_all_clauses(assign: Dict[int, bool], cls: List[List[int]]) -> bool:
+        # Check that all clauses are satisfied by the current assignment
+        for clause in cls:
+            satisfied = False
+            for literal in clause:
+                if literal > 0 and assign[abs(literal)] is True:
+                    satisfied = True
+                    break
+                if literal < 0 and assign[abs(literal)] is False:
+                    satisfied = True
+                    break
+            if not satisfied:
+                return False
+        return True
+
+    if backtrack(1):  # Start with variable 1
+        return assignment
+    else:
         return None
 
-    return is_satisfiable(formula)
+def solve_3sat(clauses: List[List[int]], nb_vars: int) -> Union[Dict[int, bool], None]:
+    """
+    Try to find an assignment satisfying all clauses, where each clause contains exactly 3 literals.
+    """
+    assignment = {}
 
+    def backtrack(var_index: int) -> bool:
+        # If all variables are assigned, check if the assignment satisfies all clauses
+        if var_index > nb_vars:
+            return check_all_clauses(assignment, clauses)
 
-def solve_3sat(formula):
-    return solve_sat(formula)  # Reuse the SAT solver
+        # Try assigning True or False to the current variable
+        for val in [True, False]:
+            assignment[var_index] = val
+            if backtrack(var_index + 1):
+                return True
+            # Backtrack if no solution found
+            del assignment[var_index]
+        return False
+
+    def check_all_clauses(assign: Dict[int, bool], cls: List[List[int]]) -> bool:
+        # Check that all clauses are satisfied by the current assignment
+        for clause in cls:
+            satisfied = False
+            for literal in clause:
+                if literal > 0 and assign[abs(literal)] is True:
+                    satisfied = True
+                    break
+                if literal < 0 and assign[abs(literal)] is False:
+                    satisfied = True
+                    break
+            if not satisfied:
+                return False
+        return True
+
+    if backtrack(1):  # Start with variable 1
+        return assignment
+    else:
+        return None
